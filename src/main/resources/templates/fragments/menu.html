@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav th:fragment="menu" class="navbar">
+    <div class="navbar-inner"><a th:href="@{/}" class="brand"><span
+            class="brand-mark">🎓</span><span><b>UTT</b> EDU</span></a>
+        <div class="nav-links"><a th:href="@{/}">Trang chủ</a><a th:href="@{/sinh-vien}">Sinh viên</a><a
+                th:href="@{/mon-hoc}">Môn học</a><a th:href="@{/lop-hoc-phan}">Lớp học phần</a><a
+                th:href="@{/lop-hanh-chinh}">Lớp hành chính</a><a th:href="@{/bao-cao}">Báo cáo</a></div>
+        <div class="nav-user"><span class="nav-avatar"
+                                    th:text="${session.admin_name!=null?#strings.substring(session.admin_name,0,1):'A'}">A</span><span
+                class="admin-name" th:text="${session.admin_name}">Admin</span><a class="logout-link"
+                                                                                  th:href="@{/logout}">Đăng xuất</a>
+        </div>
+    </div>
+</nav>
+<div th:fragment="flash" class="container flash-container">
+    <div th:if="${success}" class="alert alert-success"><span>✓</span><span th:text="${success}"></span></div>
+    <div th:if="${error}" class="alert alert-danger"><span>!</span><span th:text="${error}"></span></div>
+</div>
+</body>
+</html>
