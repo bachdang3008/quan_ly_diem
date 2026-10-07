@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Lớp hành chính</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<div th:replace="~{fragments/menu :: flash}"></div>
+<main class="container">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="eyebrow">Lớp hành chính</div>
+            <h1 th:text="${lop==null?'Thêm lớp hành chính':'Cập nhật lớp hành chính'}"></h1>
+            <p>Tạo lớp mới hoặc cập nhật thông tin lớp hiện có.</p></div>
+        <a class="btn ghost" th:href="@{/lop-hanh-chinh}">← Quay lại</a></div>
+    <div class="card form-card">
+        <form method="post"
+              th:action="${lop==null}?@{/lop-hanh-chinh/them}:@{/lop-hanh-chinh/sua/{id}(id=${lop.maLopHc})}">
+            <div class="form-grid">
+                <div class="form-group"><label>Mã lớp</label><input class="form-control" name="maLopHc"
+                                                                    th:value="${lop?.maLopHc}"
+                                                                    th:readonly="${lop!=null}" required
+                                                                    placeholder="VD: 73DCTT23"></div>
+                <div class="form-group"><label>Tên lớp</label><input class="form-control" name="tenLopHc"
+                                                                     th:value="${lop?.tenLopHc}" required
+                                                                     placeholder="Tên lớp hành chính"></div>
+                <div class="form-group full"><label>Khoa trực thuộc</label><select class="form-control" name="maKhoa">
+                    <option th:each="k:${dsKhoa}" th:value="${k.maKhoa}" th:text="|${k.maKhoa} — ${k.tenKhoa}|"
+                            th:selected="${lop!=null&&lop.khoa.maKhoa==k.maKhoa}"></option>
+                </select></div>
+            </div>
+            <div th:if="${lop==null}" class="subform">
+                <div class="card-title">＋ Tạo khoa mới ngay</div>
+                <p class="card-subtitle">Chỉ điền hai ô dưới đây nếu khoa chưa tồn tại.</p>
+                <div class="form-grid">
+                    <div class="form-group"><label>Mã khoa mới</label><input class="form-control" name="maKhoaMoi"
+                                                                             placeholder="VD: CNTT"></div>
+                    <div class="form-group"><label>Tên khoa mới</label><input class="form-control" name="tenKhoaMoi"
+                                                                              placeholder="Công nghệ thông tin"></div>
+                </div>
+            </div>
+            <div class="form-actions"><a class="btn ghost" th:href="@{/lop-hanh-chinh}">Hủy</a>
+                <button class="btn success btn-lg">✓ Lưu thông tin</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

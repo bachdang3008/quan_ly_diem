@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Lớp hành chính</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<div th:replace="~{fragments/menu :: flash}"></div>
+<main class="container">
+    <section class="page-banner page-banner-green">
+        <div><span class="page-kicker">Tổ chức sinh viên</span>
+            <h1>Quản lý lớp hành chính</h1>
+            <p>Theo dõi các lớp sinh hoạt và khoa trực thuộc trong toàn trường.</p></div>
+        <div class="page-banner-side">
+            <div class="count-pill"><strong th:text="${#lists.size(dsLop)}">0</strong><span>Lớp hành chính</span></div>
+            <a class="btn btn-light" th:href="@{/lop-hanh-chinh/them}">＋ Thêm lớp</a></div>
+    </section>
+    <section class="data-card">
+        <div class="data-card-head">
+            <div><h2>Danh sách lớp hành chính</h2>
+                <p>Chọn một lớp để xem danh sách sinh viên.</p></div>
+            <span class="record-badge" th:text="|${#lists.size(dsLop)} lớp|">0 lớp</span></div>
+        <div class="table-wrap clean-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Mã lớp</th>
+                    <th>Tên lớp</th>
+                    <th>Khoa trực thuộc</th>
+                    <th class="text-right">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="l:${dsLop}">
+                    <td><span class="code-badge green" th:text="${l.maLopHc}"></span></td>
+                    <td><b th:text="${l.tenLopHc}"></b></td>
+                    <td><span class="faculty-cell"><span>🏛️</span><span th:text="${l.khoa.tenKhoa}"></span></span></td>
+                    <td>
+                        <div class="row-actions"><a class="action-chip view"
+                                                    th:href="@{/lop-hanh-chinh/{id}(id=${l.maLopHc})}">👥 DSSV</a><a
+                                class="icon-btn edit" th:href="@{/lop-hanh-chinh/sua/{id}(id=${l.maLopHc})}"
+                                title="Sửa">✎</a>
+                            <form method="post" th:action="@{/lop-hanh-chinh/xoa/{id}(id=${l.maLopHc})}"
+                                  onsubmit="return confirm('Xóa lớp hành chính này?')">
+                                <button class="icon-btn delete" title="Xóa">×</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(dsLop)}">
+                    <td colspan="4">
+                        <div class="empty-state"><span>🏛️</span><b>Chưa có lớp hành chính</b>
+                            <p>Thêm lớp mới để quản lý sinh viên theo khoa.</p></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
