@@ -5,7 +5,9 @@ import org.example.quan_ly_diem.entity.SinhVien;
 import org.example.quan_ly_diem.repository.LopHanhChinhRepository;
 import org.example.quan_ly_diem.repository.SinhVienRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -60,5 +62,30 @@ public class SinhVienService {
 
     public List<SinhVien> layTheoLop(String maLopHc) {
         return sinhVienRepository.findByLopHanhChinh_MaLopHcOrderByMaSvAsc(maLopHc);
+    }
+    @Transactional
+    public void them(String maSv, String hoTen, LocalDate ngaySinh, String gioiTinh, String maLopHc) {
+        SinhVien sinhVien = new SinhVien();
+        sinhVien.setMaSv(maSv);
+        sinhVien.setHoTen(hoTen);
+        sinhVien.setNgaySinh(ngaySinh);
+        sinhVien.setGioiTinh(gioiTinh);
+        sinhVien.setLopHanhChinh(lopHanhChinhRepository.findById(maLopHc).orElseThrow());
+        sinhVienRepository.save(sinhVien);
+    }
+
+    @Transactional
+    public void capNhat(String maSv, String hoTen, LocalDate ngaySinh, String gioiTinh, String maLopHc) {
+        SinhVien sinhVien = layTheoMa(maSv);
+        sinhVien.setHoTen(hoTen);
+        sinhVien.setNgaySinh(ngaySinh);
+        sinhVien.setGioiTinh(gioiTinh);
+        sinhVien.setLopHanhChinh(lopHanhChinhRepository.findById(maLopHc).orElseThrow());
+        sinhVienRepository.save(sinhVien);
+    }
+
+    @Transactional
+    public void xoa(String maSv) {
+        sinhVienRepository.deleteById(maSv);
     }
 }
