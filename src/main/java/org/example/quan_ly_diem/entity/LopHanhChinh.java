@@ -19,5 +19,4 @@ public class LopHanhChinh {
     @ManyToOne(optional = false)
     @JoinColumn(name = "ma_khoa", nullable = false)
     private Khoa khoa;
-
 }

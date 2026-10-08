@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Bảng điểm</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container">
+    <div class="toolbar no-print"><a class="btn ghost" th:href="@{/sinh-vien}">← Quay lại</a>
+        <button class="btn primary" onclick="window.print()">🖨 In bảng điểm</button>
+    </div>
+    <section class="grade-sheet">
+        <div class="grade-sheet-header"><p>BỘ GIÁO DỤC VÀ ĐÀO TẠO</p>
+            <h2>TRƯỜNG ĐẠI HỌC CÔNG NGHỆ GTVT</h2>
+            <p>BẢNG ĐIỂM CÁ NHÂN</p></div>
+        <div class="student-info">
+            <div><span>Họ và tên</span><b th:text="${sv.hoTen}"></b></div>
+            <div><span>Mã sinh viên</span><b th:text="${sv.maSv}"></b></div>
+            <div><span>Lớp hành chính</span><b th:text="${sv.lopHanhChinh?.maLopHc}"></b></div>
+            <div><span>Ngày sinh</span><b th:text="${sv.ngaySinh}"></b></div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Môn học</th>
+                    <th>TC</th>
+                    <th>Hệ 10</th>
+                    <th>Chữ</th>
+                    <th>Hệ 4</th>
+                    <th>Học kỳ</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="d,st:${dsDiem}">
+                    <td th:text="${st.count}"></td>
+                    <td class="cell-strong" th:text="${d.lopHocPhan.monHoc.tenMon}"></td>
+                    <td th:text="${d.lopHocPhan.monHoc.soTinChi}"></td>
+                    <td th:text="${d.diemTongKetHe10}"></td>
+                    <td><span class="grade-a" th:text="${d.diemChu}"></span></td>
+                    <td th:text="${d.diemTongKetHe4}"></td>
+                    <td th:text="${d.lopHocPhan.hocKy.tenHk}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="summary-strip">
+            <div class="summary-item"><b th:text="${tongTinChi}"></b><span>Tín chỉ tích lũy</span></div>
+            <div class="summary-item"><b th:text="|${gpa}/4.0|"></b><span>GPA tích lũy</span></div>
+            <div class="summary-item"><b th:text="${xepLoai}"></b><span>Xếp loại học lực</span></div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
