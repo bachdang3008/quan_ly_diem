@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Sinh viên</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<main class="container">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="eyebrow">Hồ sơ sinh viên</div>
+            <h1 th:text="${sv==null?'Thêm sinh viên mới':'Cập nhật sinh viên'}"></h1>
+            <p>Nhập đầy đủ thông tin cơ bản của sinh viên.</p></div>
+        <a class="btn ghost" th:href="@{/sinh-vien}">← Quay lại danh sách</a></div>
+    <div class="card form-card">
+        <form method="post" th:action="${sv==null}?@{/sinh-vien/them}:@{/sinh-vien/sua/{id}(id=${sv.maSv})}">
+            <div class="form-grid">
+                <div class="form-group"><label>Mã sinh viên</label><input class="form-control" name="maSv"
+                                                                          th:value="${sv?.maSv}"
+                                                                          th:readonly="${sv!=null}" required
+                                                                          placeholder="VD: 73DCTT001">
+                    <div class="hint">Mã sinh viên không thể sửa sau khi tạo.</div>
+                </div>
+                <div class="form-group"><label>Họ và tên</label><input class="form-control" name="hoTen"
+                                                                       th:value="${sv?.hoTen}" required
+                                                                       placeholder="Nguyễn Văn A"></div>
+                <div class="form-group"><label>Ngày sinh</label><input class="form-control" type="date" name="ngaySinh"
+                                                                       th:value="${sv?.ngaySinh}" required></div>
+                <div class="form-group"><label>Giới tính</label><select class="form-control" name="gioiTinh">
+                    <option value="Nam" th:selected="${sv==null||sv.gioiTinh=='Nam'}">Nam</option>
+                    <option value="Nu" th:selected="${sv!=null&&sv.gioiTinh=='Nu'}">Nữ</option>
+                </select></div>
+                <div class="form-group full"><label>Lớp hành chính</label><select class="form-control" name="maLopHc">
+                    <option th:each="l:${dsLop}" th:value="${l.maLopHc}" th:text="|${l.maLopHc} — ${l.tenLopHc}|"
+                            th:selected="${sv!=null&&sv.lopHanhChinh!=null&&sv.lopHanhChinh.maLopHc==l.maLopHc}"></option>
+                </select></div>
+            </div>
+            <div class="form-actions"><a class="btn ghost" th:href="@{/sinh-vien}">Hủy</a>
+                <button class="btn success btn-lg">✓ Lưu sinh viên</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Quản lý sinh viên</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<div th:replace="~{fragments/menu :: flash}"></div>
+<main class="container">
+    <section class="page-banner page-banner-blue">
+        <div><span class="page-kicker">Hồ sơ đào tạo</span>
+            <h1>Quản lý sinh viên</h1>
+            <p>Tìm kiếm, cập nhật thông tin và theo dõi kết quả học tập của sinh viên.</p></div>
+        <div class="page-banner-side">
+            <div class="count-pill"><strong
+                    th:text="${#lists.size(dsSinhVien)}">0</strong><span>Kết quả đang hiển thị</span></div>
+            <a class="btn btn-light" th:href="@{/sinh-vien/them}">＋ Thêm sinh viên</a></div>
+    </section>
+
+    <form class="filter-panel" method="get">
+        <div class="filter-title"><span>⌕</span>
+            <div><b>Bộ lọc sinh viên</b><small>Thu hẹp danh sách theo khóa, lớp hoặc từ khóa</small></div>
+        </div>
+        <div class="filter-fields">
+            <select name="khoa" onchange="this.form.submit()">
+                <option value="">Tất cả khóa</option>
+                <option th:each="k:${dsKhoa}" th:value="${k}" th:text="|Khóa ${k}|"
+                        th:selected="${k==khoaChon}"></option>
+            </select>
+            <select name="lop" onchange="this.form.submit()">
+                <option value="">Tất cả lớp</option>
+                <option th:each="l:${dsLop}" th:value="${l.maLopHc}" th:text="${l.tenLopHc}"
+                        th:selected="${l.maLopHc==lopChon}"></option>
+            </select>
+            <div class="search-box"><span>⌕</span><input name="tu_khoa" th:value="${tuKhoa}"
+                                                         placeholder="Mã sinh viên hoặc họ tên..."></div>
+            <button class="btn primary">Tìm kiếm</button>
+            <a class="btn ghost" th:href="@{/sinh-vien}">Làm mới</a>
+        </div>
+    </form>
+
+    <section class="data-card">
+        <div class="data-card-head">
+            <div><h2>Danh sách sinh viên</h2>
+                <p>Dữ liệu hồ sơ theo bộ lọc hiện tại.</p></div>
+            <span class="record-badge" th:text="|${#lists.size(dsSinhVien)} sinh viên|">0 sinh viên</span></div>
+        <div class="table-wrap clean-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>Ngày sinh</th>
+                    <th>Giới tính</th>
+                    <th>Lớp hành chính</th>
+                    <th class="text-right">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s:${dsSinhVien}">
+                    <td><span class="code-badge" th:text="${s.maSv}"></span></td>
+                    <td>
+                        <div class="person-cell"><span class="person-avatar"
+                                                       th:text="${#strings.substring(s.hoTen,0,1)}">S</span><b
+                                th:text="${s.hoTen}"></b></div>
+                    </td>
+                    <td th:text="${s.ngaySinh}"></td>
+                    <td><span class="soft-badge" th:text="${s.gioiTinh=='Nu'?'Nữ':s.gioiTinh}"></span></td>
+                    <td th:text="${s.lopHanhChinh!=null?s.lopHanhChinh.tenLopHc:'Chưa xếp lớp'}"></td>
+                    <td>
+                        <div class="row-actions"><a class="icon-btn edit" title="Sửa"
+                                                    th:href="@{/sinh-vien/sua/{id}(id=${s.maSv})}">✎</a><a
+                                class="icon-btn view" title="Bảng điểm"
+                                th:href="@{/sinh-vien/{id}/bang-diem(id=${s.maSv})}">◉</a>
+                            <form method="post" th:action="@{/sinh-vien/xoa/{id}(id=${s.maSv})}"
+                                  onsubmit="return confirm('Bạn chắc chắn muốn xóa sinh viên này?')">
+                                <button class="icon-btn delete" title="Xóa">×</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(dsSinhVien)}">
+                    <td colspan="6">
+                        <div class="empty-state"><span>🔎</span><b>Không tìm thấy sinh viên</b>
+                            <p>Hãy thay đổi bộ lọc hoặc thêm sinh viên mới.</p></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

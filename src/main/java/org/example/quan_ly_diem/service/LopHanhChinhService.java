@@ -2,8 +2,10 @@ package org.example.quan_ly_diem.service;
 
 import org.example.quan_ly_diem.entity.Khoa;
 import org.example.quan_ly_diem.entity.LopHanhChinh;
+import org.example.quan_ly_diem.entity.SinhVien;
 import org.example.quan_ly_diem.repository.KhoaRepository;
 import org.example.quan_ly_diem.repository.LopHanhChinhRepository;
+import org.example.quan_ly_diem.repository.SinhVienRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +15,12 @@ import java.util.List;
 public class LopHanhChinhService {
     private final LopHanhChinhRepository lopRepository;
     private final KhoaRepository khoaRepository;
+    private final SinhVienRepository sinhVienRepository;
 
-    public LopHanhChinhService(LopHanhChinhRepository lopRepository, KhoaRepository khoaRepository) {
+    public LopHanhChinhService(LopHanhChinhRepository lopRepository, KhoaRepository khoaRepository, SinhVienRepository sinhVienRepository) {
         this.lopRepository = lopRepository;
         this.khoaRepository = khoaRepository;
+        this.sinhVienRepository = sinhVienRepository;
     }
 
     public List<LopHanhChinh> layTatCa() {
@@ -29,6 +33,9 @@ public class LopHanhChinhService {
 
     public LopHanhChinh layTheoMa(String maLopHc) {
         return lopRepository.findById(maLopHc).orElseThrow();
+    }
+    public List<SinhVien> laySinhVienTrongLop(String maLopHc) {
+        return sinhVienRepository.findByLopHanhChinh_MaLopHcOrderByMaSvAsc(maLopHc);
     }
 
     @Transactional
