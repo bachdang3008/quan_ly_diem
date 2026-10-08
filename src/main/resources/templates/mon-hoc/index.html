@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Quản lý môn học</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<div th:replace="~{fragments/menu :: flash}"></div>
+<main class="container">
+    <section class="page-banner page-banner-violet">
+        <div><span class="page-kicker">Danh mục đào tạo</span>
+            <h1>Quản lý môn học</h1>
+            <p>Quản lý mã môn, tên môn và số tín chỉ trong chương trình đào tạo.</p></div>
+        <div class="page-banner-side">
+            <div class="count-pill"><strong th:text="${#lists.size(dsMon)}">0</strong><span>Môn học</span></div>
+            <a class="btn btn-light" th:href="@{/mon-hoc/them}">＋ Thêm môn học</a></div>
+    </section>
+    <section class="data-card">
+        <div class="data-card-head">
+            <div><h2>Danh mục môn học</h2>
+                <p>Thông tin các môn học đang được sử dụng.</p></div>
+            <span class="record-badge" th:text="|${#lists.size(dsMon)} môn|">0 môn</span></div>
+        <div class="table-wrap clean-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Mã môn</th>
+                    <th>Tên môn học</th>
+                    <th>Số tín chỉ</th>
+                    <th class="text-right">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="m:${dsMon}">
+                    <td><span class="code-badge violet" th:text="${m.maMon}"></span></td>
+                    <td>
+                        <div class="subject-cell"><span class="subject-icon">📘</span><b th:text="${m.tenMon}"></b></div>
+                    </td>
+                    <td><span class="credit-badge" th:text="|${m.soTinChi} tín chỉ|"></span></td>
+                    <td>
+                        <div class="row-actions"><a class="icon-btn edit" title="Sửa"
+                                                    th:href="@{/mon-hoc/sua/{id}(id=${m.maMon})}">✎</a>
+                            <form method="post" th:action="@{/mon-hoc/xoa/{id}(id=${m.maMon})}"
+                                  onsubmit="return confirm('Xóa môn học này?')">
+                                <button class="icon-btn delete" title="Xóa">×</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(dsMon)}">
+                    <td colspan="4">
+                        <div class="empty-state"><span>📚</span><b>Chưa có môn học</b>
+                            <p>Thêm môn học đầu tiên để bắt đầu.</p></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
