@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Vắng nghỉ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="container" style="max-width:850px">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="eyebrow">Chuyên cần</div>
+            <h1 th:text="|Vắng nghỉ · ${sv.hoTen}|"></h1>
+            <p><span class="cell-code" th:text="${sv.maSv}"></span> · Quản lý chi tiết các buổi nghỉ học.</p></div>
+        <a class="btn ghost" th:if="${from=='nhapDiem'}" th:href="@{/lop-hoc-phan/{id}/nhap-diem(id=${lop.maLopHp})}">←
+            Quay lại nhập điểm</a><a class="btn ghost" th:unless="${from=='nhapDiem'}"
+                                     th:href="@{/lop-hoc-phan/{id}(id=${lop.maLopHp})}">← Quay lại lớp</a></div>
+    <div class="card">
+        <form method="post" class="toolbar" style="margin:0"><input type="hidden" name="from" th:value="${from}"><input
+                type="date" name="ngayVang" required><input name="lyDo" placeholder="Lý do vắng..." required
+                                                            style="flex:1;min-width:240px">
+            <button class="btn success">＋ Thêm ngày vắng</button>
+        </form>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>Ngày vắng</th>
+                <th>Lý do</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="v:${dsVang}">
+                <td class="cell-strong" th:text="${v.ngayVang}"></td>
+                <td th:text="${v.lyDo}"></td>
+                <td>
+                    <form method="post"
+                          th:action="@{/lop-hoc-phan/{id}/vang/{sv}/xoa/{vid}(id=${lop.maLopHp},sv=${sv.maSv},vid=${v.id})}"
+                          onsubmit="return confirm('Xóa ngày vắng này?')"><input type="hidden" name="from"
+                                                                                 th:value="${from}">
+                        <button class="btn danger">× Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
