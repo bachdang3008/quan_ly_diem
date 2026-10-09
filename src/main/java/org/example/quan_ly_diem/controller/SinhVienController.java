@@ -85,4 +85,14 @@ public class SinhVienController {
         }
         return "redirect:/sinh-vien";
     }
+    @GetMapping("/{id}/bang-diem")
+    public String bangDiem(@PathVariable String id, Model model) {
+        double gpa = bangDiemService.tinhGpaTichLuy(id);
+        model.addAttribute("sv", sinhVienService.layTheoMa(id));
+        model.addAttribute("dsDiem", bangDiemService.bangDiemCaNhan(id));
+        model.addAttribute("gpa", gpa);
+        model.addAttribute("tongTinChi", bangDiemService.tongTinChi(id));
+        model.addAttribute("xepLoai", bangDiemService.xepLoai(gpa));
+        return "sinh-vien/bang-diem";
+    }
 }
