@@ -65,4 +65,11 @@ public class BangDiemService {
     public void xoaKhoiLop(Long id) {
         bangDiemRepository.deleteById(id);
     }
+
+    @Transactional
+    public void capNhatSoBuoiVang(Long maLopHp, String maSv, int soBuoi) {
+        BangDiem bd = bangDiemRepository.findByLopHocPhan_MaLopHpAndSinhVien_MaSv(maLopHp, maSv).orElseThrow();
+        bd.setSoBuoiVang(soBuoi);
+        bangDiemRepository.save(bd);
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -138,5 +139,38 @@ public class LopHocPhanController {
         bangDiemService.themNhieuSinhVien(id, maSv);
         return "redirect:/lop-hoc-phan/" + id;
     }
+    @GetMapping("/{id}/vang/{maSv}")
+    public String vang(@PathVariable Long id,
+                       @PathVariable String maSv,
+                       @RequestParam(defaultValue = "") String from,
+                       Model model) {
+        model.addAttribute("lop", lopHocPhanService.layTheoMa(id));
+        model.addAttribute("sv", lopHocPhanService.laySinhVien(maSv));
+        model.addAttribute("dsVang", vangNghiService.danhSach(id, maSv));
+        model.addAttribute("from", from);
+        return "lop-hoc-phan/vang-nghi";
+    }
 
+    @PostMapping("/{id}/vang/{maSv}")
+    public String themVang(@PathVariable Long id,
+                           @PathVariable String maSv,
+                           @RequestParam LocalDate ngayVang,
+                           @RequestParam String lyDo,
+                           @RequestParam(defaultValue = "") String from) {
+        vangNghiService.them(id, maSv, ngayVang, lyDo);
+        return "redirect:/lop-hoc-phan/" + id + "/vang/" + maSv + thamSoFrom(from);
+    }
+
+    @PostMapping("/{id}/vang/{maSv}/xoa/{vangId}")
+    public String xoaVang(@PathVariable Long id,
+                          @PathVariable String maSv,
+                          @PathVariable Long vangId,
+                          @RequestParam(defaultValue = "") String from) {
+        vangNghiService.xoa(vangId, id, maSv);
+        return "redirect:/lop-hoc-phan/" + id + "/vang/" + maSv + thamSoFrom(from);
+    }
+
+    private String thamSoFrom(String from) {
+        return from == null || from.isBlank() ? "" : "?from=" + from;
+    }
 }
