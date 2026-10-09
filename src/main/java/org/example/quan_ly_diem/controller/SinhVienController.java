@@ -1,5 +1,6 @@
 package org.example.quan_ly_diem.controller;
 
+import org.example.quan_ly_diem.service.BangDiemService;
 import org.example.quan_ly_diem.service.SinhVienService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +13,12 @@ import java.time.LocalDate;
 @RequestMapping("/sinh-vien")
 public class SinhVienController {
     private final SinhVienService sinhVienService;
+    private final BangDiemService bangDiemService;
 
-    public SinhVienController(SinhVienService sinhVienService) {
+
+    public SinhVienController(SinhVienService sinhVienService,BangDiemService bangDiemService) {
         this.sinhVienService = sinhVienService;
+        this.bangDiemService = bangDiemService;
     }
 
     @GetMapping
@@ -81,5 +85,4 @@ public class SinhVienController {
         }
         return "redirect:/sinh-vien";
     }
-
 }
