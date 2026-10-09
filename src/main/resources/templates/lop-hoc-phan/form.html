@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Lớp học phần</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<main class="container">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="eyebrow">Lớp học phần</div>
+            <h1 th:text="${lop==null?'Mở lớp học phần mới':'Cập nhật lớp học phần'}"></h1>
+            <p>Cấu hình môn học, học kỳ, giảng viên và phòng học.</p></div>
+        <a class="btn ghost" th:href="@{/lop-hoc-phan}">← Quay lại</a></div>
+    <div class="card form-card">
+        <form method="post" th:action="${lop==null}?@{/lop-hoc-phan/them}:@{/lop-hoc-phan/sua/{id}(id=${lop.maLopHp})}">
+            <div class="form-grid">
+                <div class="form-group"><label>Mã lớp hiển thị</label><input class="form-control" name="maLopHienThi"
+                                                                             th:value="${lop?.maLopHienThi}" required
+                                                                             placeholder="VD: JAVA-K73-01"></div>
+                <div class="form-group"><label>Môn học</label><select class="form-control" name="maMon">
+                    <option th:each="m:${dsMon}" th:value="${m.maMon}" th:text="|${m.tenMon} (${m.soTinChi} TC)|"
+                            th:selected="${lop!=null&&lop.monHoc.maMon==m.maMon}"></option>
+                </select></div>
+                <div class="form-group full"><label>Học kỳ</label><select class="form-control" name="maHk">
+                    <option th:each="h:${dsHocKy}" th:value="${h.maHk}" th:text="|${h.tenHk} (${h.namHoc})|"
+                            th:selected="${lop!=null&&lop.hocKy.maHk==h.maHk}"></option>
+                </select></div>
+                <div class="form-group"><label>Giảng viên phụ trách</label><input class="form-control" name="giangVien"
+                                                                                  th:value="${lop?.giangVienPhuTrach}"
+                                                                                  required
+                                                                                  placeholder="VD: ThS. Nguyễn Văn A">
+                </div>
+                <div class="form-group"><label>Phòng học</label><input class="form-control" name="phongHoc"
+                                                                       th:value="${lop?.phongHoc}" required
+                                                                       placeholder="VD: P.305-H1"></div>
+                <div class="form-group"><label>Tổng số buổi</label><input class="form-control" type="number"
+                                                                          name="tongSoBuoi" min="1"
+                                                                          th:value="${lop==null?15:lop.tongSoBuoiHoc}"
+                                                                          required></div>
+            </div>
+            <div th:if="${lop==null}" class="subform"><label style="display:flex;gap:8px;align-items:center"><input
+                    type="checkbox" name="taoHocKyMoi" value="true" style="min-height:auto"> Tạo học kỳ mới nếu chưa có</label>
+                <div class="form-grid">
+                    <div class="form-group"><label>Tên học kỳ mới</label><select class="form-control" name="tenHkMoi">
+                        <option>Học kỳ 1</option>
+                        <option>Học kỳ 2</option>
+                        <option>Học kỳ Hè</option>
+                    </select></div>
+                    <div class="form-group"><label>Năm bắt đầu</label><input class="form-control" type="number"
+                                                                             name="namBatDau" placeholder="VD: 2026">
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions"><a class="btn ghost" th:href="@{/lop-hoc-phan}">Hủy</a>
+                <button class="btn success btn-lg">✓ Lưu lớp học phần</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

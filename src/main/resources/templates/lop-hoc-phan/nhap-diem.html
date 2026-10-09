@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Nhập điểm</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<div th:replace="~{fragments/menu :: flash}"></div>
+<main class="container">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="eyebrow">Sổ điểm</div>
+            <h1 th:text="|Nhập điểm · ${lop.monHoc.tenMon}|"></h1>
+            <p th:text="|Lớp ${lop.maLopHienThi} · CC 10% · GK 30% · CK 60%|"></p></div>
+        <a class="btn ghost" th:href="@{/lop-hoc-phan/{id}(id=${lop.maLopHp})}">← Chi tiết lớp</a></div>
+    <div class="alert alert-info"><span>i</span><span>Điểm chuyên cần được tính tự động theo số buổi vắng. Sinh viên vắng quá 3 buổi sẽ bị đặt điểm chuyên cần và cuối kỳ về 0 khi lưu.</span>
+    </div>
+    <div th:if="${#lists.isEmpty(dsSinhVien)}" class="card"
+         style="text-align:center;padding:36px 24px;margin-bottom:20px">
+        <h3 style="margin-top:0">Lớp học phần chưa có sinh viên</h3>
+        <p class="muted">Bạn cần thêm sinh viên vào lớp trước, sau đó mới có thể nhập điểm giữa kỳ và cuối kỳ.</p>
+        <a class="btn primary" th:href="@{/lop-hoc-phan/{id}(id=${lop.maLopHp})}">＋ Thêm sinh viên vào lớp</a>
+    </div>
+    <form method="post" th:if="${!#lists.isEmpty(dsSinhVien)}">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>Vắng</th>
+                    <th>CC tự động</th>
+                    <th>GK 30%</th>
+                    <th>CK 60%</th>
+                    <th>Hệ 10</th>
+                    <th>Chữ</th>
+                    <th>Hệ 4</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="b,st:${dsSinhVien}">
+                    <td th:text="${st.count}"></td>
+                    <td class="cell-code" th:text="${b.sinhVien.maSv}"></td>
+                    <td class="cell-strong" th:text="${b.sinhVien.hoTen}"></td>
+                    <td><b class="text-danger" th:text="${b.soBuoiVang}"></b><br><a class="text-primary"
+                                                                                    th:href="@{/lop-hoc-phan/{id}/vang/{sv}(id=${lop.maLopHp},sv=${b.sinhVien.maSv},from='nhapDiem')}">Cập
+                        nhật vắng</a></td>
+                    <td th:text="${b.diemChuyenCan}"></td>
+                    <td><input type="number" step="0.1" min="0" max="10" th:name="|gk_${b.sinhVien.maSv}|"
+                               th:value="${b.diemGiuaKy}" style="width:82px"></td>
+                    <td><input type="number" step="0.1" min="0" max="10" th:name="|ck_${b.sinhVien.maSv}|"
+                               th:value="${b.diemCuoiKy}" style="width:82px"></td>
+                    <td class="cell-strong" th:text="${b.diemTongKetHe10}"></td>
+                    <td><span class="grade-a" th:text="${b.diemChu}"></span></td>
+                    <td th:text="${b.diemTongKetHe4}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-actions">
+            <button class="btn success btn-lg">💾 Lưu bảng điểm</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

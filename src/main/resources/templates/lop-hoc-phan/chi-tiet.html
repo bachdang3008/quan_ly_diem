@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Chi tiết lớp học phần</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<div th:replace="~{fragments/menu :: flash}"></div>
+<main class="container">
+    <section class="detail-hero">
+        <div><span class="page-kicker">Chi tiết lớp học phần</span>
+            <h1 th:text="|${lop.maLopHienThi} · ${lop.monHoc.tenMon}|">Lớp học phần</h1>
+            <div class="detail-meta"><span>📅 <b th:text="${lop.hocKy.tenHk}"></b></span><span>👨‍🏫 <b
+                    th:text="${lop.giangVienPhuTrach}"></b></span><span>📍 <b th:text="${lop.phongHoc}"></b></span><span>🕒 <b
+                    th:text="|${lop.tongSoBuoiHoc} buổi|"></b></span></div>
+        </div>
+        <a class="btn btn-light-outline" th:href="@{/lop-hoc-phan}">← Danh sách lớp</a></section>
+    <section class="class-toolbar">
+        <form method="post" th:action="@{/lop-hoc-phan/{id}/them-sinh-vien(id=${lop.maLopHp})}"
+              class="add-student-inline">
+            <div class="search-box"><span>👤</span><input name="maSv" placeholder="Nhập mã sinh viên" required></div>
+            <button class="btn success">＋ Thêm SV</button>
+        </form>
+        <div class="actions"><a class="btn info" th:href="@{/lop-hoc-phan/{id}/them-nhieu(id=${lop.maLopHp})}">👥 Chọn
+            nhiều</a><a class="btn primary" th:href="@{/lop-hoc-phan/{id}/nhap-diem(id=${lop.maLopHp})}">📝 Vào sổ
+            điểm</a></div>
+    </section>
+    <section class="data-card">
+        <div class="data-card-head">
+            <div><h2>Sinh viên trong lớp</h2>
+                <p>Danh sách đăng ký học phần và điểm thành phần.</p></div>
+            <span class="record-badge" th:text="|${#lists.size(dsSinhVien)} sinh viên|">0 sinh viên</span></div>
+        <div class="table-wrap clean-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>Lớp HC</th>
+                    <th>Chuyên cần</th>
+                    <th>Giữa kỳ</th>
+                    <th>Cuối kỳ</th>
+                    <th class="text-right">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="b,st:${dsSinhVien}">
+                    <td th:text="${st.count}"></td>
+                    <td><span class="code-badge" th:text="${b.sinhVien.maSv}"></span></td>
+                    <td><b th:text="${b.sinhVien.hoTen}"></b></td>
+                    <td th:text="${b.sinhVien.lopHanhChinh?.maLopHc}"></td>
+                    <td><span class="score-badge" th:text="${b.diemChuyenCan}"></span></td>
+                    <td><span class="score-badge" th:text="${b.diemGiuaKy}"></span></td>
+                    <td><span class="score-badge" th:text="${b.diemCuoiKy}"></span></td>
+                    <td>
+                        <div class="row-actions">
+                            <form method="post"
+                                  th:action="@{/lop-hoc-phan/{id}/xoa-sinh-vien/{bid}(id=${lop.maLopHp},bid=${b.id})}"
+                                  onsubmit="return confirm('Hủy học phần của sinh viên này?')">
+                                <button class="action-chip remove">Hủy học phần</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(dsSinhVien)}">
+                    <td colspan="8">
+                        <div class="empty-state"><span>👥</span><b>Lớp chưa có sinh viên</b>
+                            <p>Thêm sinh viên bằng mã hoặc chọn nhiều từ lớp hành chính.</p></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
