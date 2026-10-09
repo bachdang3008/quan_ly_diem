@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/lop-hoc-phan")
@@ -138,6 +139,21 @@ public class LopHocPhanController {
                                 @RequestParam(required = false, name = "maSv") List<String> maSv) {
         bangDiemService.themNhieuSinhVien(id, maSv);
         return "redirect:/lop-hoc-phan/" + id;
+    }
+    @GetMapping("/{id}/nhap-diem")
+    public String nhapDiem(@PathVariable Long id, Model model) {
+        model.addAttribute("lop", lopHocPhanService.layTheoMa(id));
+        model.addAttribute("dsSinhVien", bangDiemService.danhSachLop(id));
+        return "lop-hoc-phan/nhap-diem";
+    }
+
+    @PostMapping("/{id}/nhap-diem")
+    public String luuDiem(@PathVariable Long id,
+                          @RequestParam Map<String, String> duLieuForm,
+                          RedirectAttributes redirect) {
+        bangDiemService.luuBangDiem(id, duLieuForm);
+        redirect.addFlashAttribute("success", "Đã lưu bảng điểm.");
+        return "redirect:/lop-hoc-phan/" + id + "/nhap-diem";
     }
     @GetMapping("/{id}/vang/{maSv}")
     public String vang(@PathVariable Long id,

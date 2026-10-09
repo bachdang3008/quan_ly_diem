@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class BangDiemService {
@@ -71,5 +73,94 @@ public class BangDiemService {
         BangDiem bd = bangDiemRepository.findByLopHocPhan_MaLopHpAndSinhVien_MaSv(maLopHp, maSv).orElseThrow();
         bd.setSoBuoiVang(soBuoi);
         bangDiemRepository.save(bd);
+    }
+    @Transactional
+    public void luuDiem(Long maLopHp, String maSv, double gk, double ck) {
+        BangDiem bd = bangDiemRepository.findByLopHocPhan_MaLopHpAndSinhVien_MaSv(maLopHp, maSv).orElseThrow();
+        int soVang = Optional.ofNullable(bd.getSoBuoiVang()).orElse(0);
+        double cc;
+        if (soVang > 3) {
+            cc = 0;
+            ck = 0;
+        } else cc = Math.max(0, 10 - soVang);
+        double tk10 = Math.round((cc * 0.1 + gk * 0.3 + ck * 0.6) * 10.0) / 10.0;
+        String chu = "F";
+        double he4 = 0;
+        if (tk10 >= 8.5) {
+            chu = "A";
+            he4 = 4.0;
+        } else if (tk10 >= 8.0) {
+            chu = "B+";
+            he4 = 3.5;
+        } else if (tk10 >= 7.0) {
+            chu = "B";
+            he4 = 3.0;
+        } else if (tk10 >= 6.5) {
+            chu = "C+";
+            he4 = 2.5;
+        } else if (tk10 >= 5.5) {
+            chu = "C";
+            he4 = 2.0;
+        } else if (tk10 >= 5.0) {
+            chu = "D+";
+            he4 = 1.5;
+        } else if (tk10 >= 4.0) {
+            chu = "D";
+            he4 = 1.0;
+        }
+        bd.setDiemChuyenCan(cc);
+        bd.setDiemGiuaKy(gk);
+        bd.setDiemCuoiKy(ck);
+        bd.setDiemTongKetHe10(tk10);
+        bd.setDiemTongKetHe4(he4);
+        bd.setDiemChu(chu);
+        bangDiemRepository.save(bd);
+    }
+
+
+    @Transactional
+    public void luuBangDiem(Long maLopHp, Map<String, String> duLieuForm) {
+        for (BangDiem bd : danhSachLop(maLopHp)) {
+            String maSv = bd.getSinhVien().getMaSv();
+            double gk = chuyenDiem(duLieuForm.get("gk_" + maSv));
+            double ck = chuyenDiem(duLieuForm.get("ck_" + maSv));
+            luuDiem(maLopHp, maSv, gk, ck);
+        }
+    }
+
+    private double chuyenDiem(String giaTri) {
+        try {
+            double diem = Double.parseDouble(giaTri);
+            return Math.max(0, Math.min(10, diem));
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public double tinhGpaTichLuy(String maSv) {
+        double tong = 0;
+        int tc = 0;
+        for (BangDiem bd : bangDiemCaNhan(maSv))
+            if (bd.getDiemTongKetHe4() != null) {
+                int soTc = bd.getLopHocPhan().getMonHoc().getSoTinChi();
+                tong += bd.getDiemTongKetHe4() * soTc;
+                tc += soTc;
+            }
+        return tc == 0 ? 0 : Math.round((tong / tc) * 100.0) / 100.0;
+    }
+
+    public int tongTinChi(String maSv) {
+        int tc = 0;
+        for (BangDiem bd : bangDiemCaNhan(maSv))
+            if (bd.getDiemTongKetHe4() != null) tc += bd.getLopHocPhan().getMonHoc().getSoTinChi();
+        return tc;
+    }
+
+    public String xepLoai(double gpa) {
+        if (gpa >= 3.6) return "Xuất sắc";
+        if (gpa >= 3.2) return "Giỏi";
+        if (gpa >= 2.5) return "Khá";
+        if (gpa >= 2.0) return "Trung bình";
+        return "Yếu";
     }
 }
