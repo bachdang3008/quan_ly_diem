@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Xét học bổng</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<main class="container">
+    <section class="page-banner page-banner-gold">
+        <div><span class="page-kicker">Khen thưởng học tập</span>
+            <h1>Xét học bổng</h1>
+            <p>Tra cứu nhanh nhóm sinh viên có kết quả học tập nổi bật.</p></div>
+        <a class="btn btn-light" th:href="@{/bao-cao}">← Tổng quan báo cáo</a></section>
+    <div class="segment-control"><a th:classappend="${loai=='XuatSac'}?' active':''"
+                                    th:href="@{/bao-cao/hoc-bong(loai='XuatSac')}">🏆 Xuất sắc · GPA ≥ 3.6</a><a
+            th:classappend="${loai=='Gioi'}?' active':''" th:href="@{/bao-cao/hoc-bong(loai='Gioi')}">★ Giỏi · GPA ≥
+        3.2</a></div>
+    <section class="data-card">
+        <div class="data-card-head">
+            <div><h2 th:text="${loai=='XuatSac'?'Danh sách sinh viên xuất sắc':'Danh sách sinh viên giỏi'}"></h2>
+                <p>Danh sách được sắp xếp theo GPA từ cao xuống thấp.</p></div>
+            <span class="record-badge gold" th:text="|${#lists.size(ds)} sinh viên|">0 sinh viên</span></div>
+        <div class="table-wrap clean-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Hạng</th>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>Lớp</th>
+                    <th>GPA</th>
+                    <th>Xếp loại</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="x,st:${ds}">
+                    <td><span class="rank-badge" th:text="|#${st.count}|"></span></td>
+                    <td><span class="code-badge violet" th:text="${x.maSv}"></span></td>
+                    <td><b th:text="${x.hoTen}"></b></td>
+                    <td th:text="${x.maLopHc}"></td>
+                    <td><span class="gpa-badge" th:text="${#numbers.formatDecimal(x.gpa,1,2)}"></span></td>
+                    <td><span class="achievement-badge" th:text="${x.gpa>=3.6?'Xuất sắc':'Giỏi'}"></span></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(ds)}">
+                    <td colspan="6">
+                        <div class="empty-state"><span>🏆</span><b>Chưa có sinh viên đạt điều kiện</b>
+                            <p>Dữ liệu sẽ xuất hiện khi có kết quả phù hợp.</p></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
