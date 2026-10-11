@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Thống kê theo lớp</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<main class="container">
+    <section class="page-banner page-banner-indigo">
+        <div><span class="page-kicker">Phân tích theo lớp</span>
+            <h1>Kết quả học tập theo lớp</h1>
+            <p>Theo dõi GPA, số môn nợ và tình trạng học tập của từng sinh viên.</p></div>
+        <a class="btn btn-light" th:href="@{/bao-cao}">← Tổng quan báo cáo</a></section>
+    <form class="filter-panel compact" method="get">
+        <div class="filter-title"><span>🏫</span>
+            <div><b>Chọn lớp hành chính</b><small>Dữ liệu sẽ được tải ngay khi chọn lớp</small></div>
+        </div>
+        <div class="filter-fields"><select name="maLopHc" onchange="this.form.submit()">
+            <option value="">-- Chọn lớp --</option>
+            <option th:each="l:${dsLop}" th:value="${l.maLopHc}" th:text="|${l.maLopHc} · ${l.tenLopHc}|"
+                    th:selected="${l.maLopHc==lopChon}"></option>
+        </select></div>
+    </form>
+    <section class="data-card" th:if="${lopChon!=''}">
+        <div class="data-card-head">
+            <div><h2>Kết quả của lớp đã chọn</h2>
+                <p>GPA được hiển thị cùng trạng thái học tập để dễ theo dõi.</p></div>
+            <span class="record-badge" th:text="|${#lists.size(ds)} sinh viên|">0 sinh viên</span></div>
+        <div class="table-wrap clean-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>GPA</th>
+                    <th>Số môn nợ</th>
+                    <th>Tình trạng</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="x,st:${ds}">
+                    <td th:text="${st.count}"></td>
+                    <td><span class="code-badge" th:text="${x.maSv}"></span></td>
+                    <td><b th:text="${x.hoTen}"></b></td>
+                    <td><span class="gpa-badge" th:text="${#numbers.formatDecimal(x.gpa,1,2)}"></span></td>
+                    <td><span th:class="${x.soMonNo>0?'debt-badge has-debt':'debt-badge'}"
+                              th:text="${x.soMonNo}"></span></td>
+                    <td><span
+                            th:class="${x.gpa>0&&x.gpa<2?'learning-status warning':(x.gpa>=3.2?'learning-status good':'learning-status normal')}"
+                            th:text="${x.gpa>0&&x.gpa<2?'Cần chú ý':(x.gpa>=3.2?'Học tập tốt':'Bình thường')}"></span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(ds)}">
+                    <td colspan="6">
+                        <div class="empty-state"><span>📋</span><b>Lớp chưa có dữ liệu điểm</b>
+                            <p>Hãy nhập điểm học phần trước khi xem báo cáo.</p></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section th:if="${lopChon==''}" class="empty-report-card"><span>🏫</span>
+        <h2>Chọn một lớp để bắt đầu</h2>
+        <p>Kết quả học tập của sinh viên sẽ xuất hiện tại đây.</p></section>
+</main>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Sinh viên trượt môn</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<main class="container">
+    <section class="page-banner page-banner-amber">
+        <div><span class="page-kicker">Theo dõi học vụ</span>
+            <h1>Sinh viên trượt môn</h1>
+            <p>Danh sách các học phần có điểm chữ F để hỗ trợ theo dõi và tư vấn học tập.</p></div>
+        <div class="page-banner-side">
+            <div class="count-pill"><strong th:text="${#lists.size(ds)}">0</strong><span>Kết quả cần chú ý</span></div>
+            <a class="btn btn-light" th:href="@{/bao-cao}">← Tổng quan báo cáo</a></div>
+    </section>
+    <section class="data-card">
+        <div class="data-card-head">
+            <div><h2>Danh sách điểm F</h2>
+                <p>Màu cảnh báo được giữ ở mức nhẹ để dễ đọc hơn.</p></div>
+            <span class="record-badge amber" th:text="|${#lists.size(ds)} kết quả|">0 kết quả</span></div>
+        <div class="table-wrap clean-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>Lớp HC</th>
+                    <th>Môn học</th>
+                    <th>Lớp HP</th>
+                    <th>Điểm tổng kết</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="x:${ds}">
+                    <td><span class="code-badge" th:text="${x.maSv}"></span></td>
+                    <td><b th:text="${x.hoTen}"></b></td>
+                    <td th:text="${x.maLopHc}"></td>
+                    <td th:text="${x.tenMon}"></td>
+                    <td th:text="${x.maLopHienThi}"></td>
+                    <td><span class="warning-score" th:text="${x.diemHe10}"></span></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(ds)}">
+                    <td colspan="6">
+                        <div class="empty-state success-empty"><span>✓</span><b>Không có sinh viên trượt môn</b>
+                            <p>Hiện chưa có kết quả điểm chữ F.</p></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
