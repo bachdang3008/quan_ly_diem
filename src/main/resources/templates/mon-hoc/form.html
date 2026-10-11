@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Môn học</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<main class="container">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="eyebrow">Môn học</div>
+            <h1 th:text="${mon==null?'Thêm môn học':'Cập nhật môn học'}"></h1>
+            <p>Thiết lập thông tin môn trong chương trình đào tạo.</p></div>
+        <a class="btn ghost" th:href="@{/mon-hoc}">← Quay lại</a></div>
+    <div class="card form-card">
+        <form method="post" th:action="${mon==null}?@{/mon-hoc/them}:@{/mon-hoc/sua/{id}(id=${mon.maMon})}">
+            <div class="form-grid">
+                <div class="form-group"><label>Mã môn</label><input class="form-control" name="maMon"
+                                                                    th:value="${mon?.maMon}" th:readonly="${mon!=null}"
+                                                                    required placeholder="VD: JAVA01"></div>
+                <div class="form-group"><label>Số tín chỉ</label><input class="form-control" type="number"
+                                                                        name="soTinChi" min="1" max="10"
+                                                                        th:value="${mon==null?3:mon.soTinChi}" required>
+                </div>
+                <div class="form-group full"><label>Tên môn học</label><input class="form-control" name="tenMon"
+                                                                              th:value="${mon?.tenMon}" required
+                                                                              placeholder="VD: Lập trình Java"></div>
+            </div>
+            <div class="form-actions"><a class="btn ghost" th:href="@{/mon-hoc}">Hủy</a>
+                <button class="btn success btn-lg">✓ Lưu môn học</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

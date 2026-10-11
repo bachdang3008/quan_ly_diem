@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Thêm nhiều sinh viên</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<main class="container">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="eyebrow">Lớp học phần</div>
+            <h1>Thêm nhiều sinh viên</h1>
+            <p>Chọn lớp hành chính để thêm nhanh sinh viên vào lớp học phần.</p></div>
+    </div>
+    <form class="toolbar card-toolbar" method="get"><label style="margin:0">Lớp hành chính</label><select name="maLopHc"
+                                                                                                          onchange="this.form.submit()">
+        <option value="">-- Chọn lớp HC --</option>
+        <option th:each="l:${dsLopHC}" th:value="${l.maLopHc}" th:text="${l.tenLopHc}"
+                th:selected="${l.maLopHc==maLopHcChon}"></option>
+    </select></form>
+    <form method="post">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Chọn</th>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>Ngày sinh</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s:${dsSinhVien}">
+                    <td><input type="checkbox" name="maSv" th:value="${s.maSv}"
+                               th:disabled="${#lists.contains(daCo,s.maSv)}"
+                               th:checked="${#lists.contains(daCo,s.maSv)}" style="min-height:auto"></td>
+                    <td class="cell-code" th:text="${s.maSv}"></td>
+                    <td class="cell-strong" th:text="${s.hoTen}"></td>
+                    <td th:text="${s.ngaySinh}"></td>
+                    <td><span th:if="${#lists.contains(daCo,s.maSv)}" class="status-good">Đã có trong lớp</span><span
+                            th:unless="${#lists.contains(daCo,s.maSv)}" class="muted">Có thể thêm</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-actions">
+            <button class="btn success btn-lg">✓ Thêm các sinh viên đã chọn</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

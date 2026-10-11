@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Báo cáo & Thống kê</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<main class="container report-page">
+    <section class="page-banner page-banner-report">
+        <div><span class="page-kicker">Phân tích dữ liệu</span>
+            <h1>Báo cáo & Thống kê</h1>
+            <p>Theo dõi chất lượng học tập bằng các chỉ số trực quan, rõ ràng và dễ tra cứu.</p></div>
+        <div class="report-hero-icon">📊</div>
+    </section>
+    <section class="report-summary-grid"><a class="report-stat amber" th:href="@{/bao-cao/truot-mon}"><span
+            class="report-stat-icon">⚠</span>
+        <div><strong th:text="${soTruot}">0</strong><b>Kết quả điểm F</b><small>Cần theo dõi học vụ</small></div>
+    </a><a class="report-stat green" th:href="@{/bao-cao/hoc-bong}"><span class="report-stat-icon">🏆</span>
+        <div><strong th:text="${soXuatSac}">0</strong><b>Sinh viên xuất sắc</b><small>GPA từ 3.6 trở lên</small></div>
+    </a><a class="report-stat blue" th:href="@{/bao-cao/theo-lop}"><span class="report-stat-icon">🏫</span>
+        <div><strong th:text="${soLop}">0</strong><b>Lớp hành chính</b><small>Phân tích kết quả theo lớp</small></div>
+    </a></section>
+    <section class="report-layout">
+        <div class="data-card chart-panel">
+            <div class="data-card-head">
+                <div><h2>Phân bố điểm toàn trường</h2>
+                    <p>Số lượng kết quả theo từng mức điểm chữ.</p></div>
+                <span class="soft-badge">Cập nhật theo dữ liệu hiện tại</span></div>
+            <div id="gradeBars" class="grade-bars"></div>
+            <div class="empty-state compact-empty" id="chartEmpty" style="display:none"><span>📈</span><b>Chưa có dữ liệu
+                điểm</b></div>
+        </div>
+        <div class="data-card gpa-panel">
+            <div class="data-card-head">
+                <div><h2>Tra cứu GPA</h2>
+                    <p>Lọc sinh viên theo nhóm xếp loại tích lũy.</p></div>
+            </div>
+            <form class="gpa-filter" method="get"><label>Mức GPA</label><select name="diemChu"
+                                                                                onchange="this.form.submit()">
+                <option value="">-- Chọn nhóm xếp loại --</option>
+                <option th:each="e:${ranges.entrySet()}" th:value="${e.key}" th:selected="${e.key==diemChon}"
+                        th:text="|${e.key} · ${labels.get(e.key)} (${#numbers.formatDecimal(e.value[0],1,2)} - ${#numbers.formatDecimal(e.value[1],1,2)})|"></option>
+            </select>
+                <p>Chọn một mức để xem danh sách sinh viên tương ứng.</p></form>
+        </div>
+    </section>
+    <section class="data-card" th:if="${diemChon!=''}">
+        <div class="data-card-head">
+            <div><h2 th:text="|Sinh viên nhóm ${diemChon} · ${labels.get(diemChon)}|">Kết quả GPA</h2>
+                <p th:text="|Tìm thấy ${#lists.size(dsGpa)} sinh viên phù hợp.|">Kết quả lọc</p></div>
+            <span class="record-badge" th:text="|${#lists.size(dsGpa)} sinh viên|">0 sinh viên</span></div>
+        <div class="table-wrap clean-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã SV</th>
+                    <th>Họ tên</th>
+                    <th>Lớp</th>
+                    <th>Khoa</th>
+                    <th>GPA</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s,st:${dsGpa}">
+                    <td th:text="${st.count}"></td>
+                    <td><span class="code-badge" th:text="${s.maSv}"></span></td>
+                    <td><b th:text="${s.hoTen}"></b></td>
+                    <td th:text="${s.tenLopHc}"></td>
+                    <td th:text="${s.maKhoa}"></td>
+                    <td><span class="gpa-badge" th:text="${#numbers.formatDecimal(s.gpaTichLuy,1,2)}"></span></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(dsGpa)}">
+                    <td colspan="6">
+                        <div class="empty-state"><span>📊</span><b>Không có sinh viên trong nhóm này</b>
+                            <p>Hãy thử chọn một nhóm GPA khác.</p></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<script th:inline="javascript">const labels =/*[[${chartLabels}]]*/[];
+const values =/*[[${chartData}]]*/[];
+const host = document.getElementById('gradeBars');
+const empty = document.getElementById('chartEmpty');
+if (!values.length) {
+    empty.style.display = 'flex'
+} else {
+    const max = Math.max(...values, 1);
+    labels.forEach((label, i) => {
+        const row = document.createElement('div');
+        row.className = 'bar-row';
+        const value = values[i] || 0;
+        row.innerHTML = `<span class="bar-label">${label}</span><div class="bar-track"><span class="bar-fill" style="width:${Math.max(4, value / max * 100)}%"></span></div><b>${value}</b>`;
+        host.appendChild(row)
+    })
+}</script>
+</body>
+</html>

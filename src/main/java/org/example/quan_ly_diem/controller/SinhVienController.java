@@ -1,5 +1,6 @@
 package org.example.quan_ly_diem.controller;
 
+import org.example.quan_ly_diem.service.BangDiemService;
 import org.example.quan_ly_diem.service.SinhVienService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +13,12 @@ import java.time.LocalDate;
 @RequestMapping("/sinh-vien")
 public class SinhVienController {
     private final SinhVienService sinhVienService;
+    private final BangDiemService bangDiemService;
 
-    public SinhVienController(SinhVienService sinhVienService) {
+
+    public SinhVienController(SinhVienService sinhVienService,BangDiemService bangDiemService) {
         this.sinhVienService = sinhVienService;
+        this.bangDiemService = bangDiemService;
     }
 
     @GetMapping
@@ -81,5 +85,14 @@ public class SinhVienController {
         }
         return "redirect:/sinh-vien";
     }
-
+    @GetMapping("/{id}/bang-diem")
+    public String bangDiem(@PathVariable String id, Model model) {
+        double gpa = bangDiemService.tinhGpaTichLuy(id);
+        model.addAttribute("sv", sinhVienService.layTheoMa(id));
+        model.addAttribute("dsDiem", bangDiemService.bangDiemCaNhan(id));
+        model.addAttribute("gpa", gpa);
+        model.addAttribute("tongTinChi", bangDiemService.tongTinChi(id));
+        model.addAttribute("xepLoai", bangDiemService.xepLoai(gpa));
+        return "sinh-vien/bang-diem";
+    }
 }

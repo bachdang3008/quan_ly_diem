@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Lớp học phần</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<div th:replace="~{fragments/menu :: flash}"></div>
+<main class="container">
+    <section class="page-banner page-banner-cyan">
+        <div><span class="page-kicker">Tổ chức giảng dạy</span>
+            <h1>Quản lý lớp học phần</h1>
+            <p>Mở lớp, quản lý sinh viên, chuyên cần và nhập điểm theo từng học kỳ.</p></div>
+        <div class="page-banner-side">
+            <div class="count-pill"><strong th:text="${#lists.size(dsLop)}">0</strong><span>Lớp đang hiển thị</span>
+            </div>
+            <a class="btn btn-light" th:href="@{/lop-hoc-phan/them}">＋ Mở lớp học phần</a></div>
+    </section>
+    <div class="filter-panel compact">
+        <div class="filter-title"><span>📅</span>
+            <div><b>Học kỳ làm việc</b><small>Chọn học kỳ để xem các lớp tương ứng</small></div>
+        </div>
+        <form method="get" class="semester-filter"><select name="maHk" onchange="this.form.submit()">
+            <option th:each="h:${dsHocKy}" th:value="${h.maHk}" th:text="|${h.tenHk} · ${h.namHoc}|"
+                    th:selected="${h.maHk==maHkChon}"></option>
+        </select></form>
+    </div>
+    <section class="data-card">
+        <div class="data-card-head">
+            <div><h2>Danh sách lớp học phần</h2>
+                <p>Truy cập nhanh chi tiết lớp hoặc sổ điểm.</p></div>
+            <span class="record-badge" th:text="|${#lists.size(dsLop)} lớp|">0 lớp</span></div>
+        <div class="table-wrap clean-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Mã lớp</th>
+                    <th>Môn học</th>
+                    <th>Học kỳ</th>
+                    <th>Giảng viên</th>
+                    <th>Phòng</th>
+                    <th class="text-right">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="l:${dsLop}">
+                    <td><span class="code-badge cyan" th:text="${l.maLopHienThi}"></span></td>
+                    <td><b th:text="${l.monHoc.tenMon}"></b></td>
+                    <td><span class="soft-badge" th:text="${l.hocKy.tenHk}"></span></td>
+                    <td th:text="${l.giangVienPhuTrach}"></td>
+                    <td><span class="room-badge" th:text="${l.phongHoc}"></span></td>
+                    <td>
+                        <div class="row-actions"><a class="action-chip view"
+                                                    th:href="@{/lop-hoc-phan/{id}(id=${l.maLopHp})}">☰ Chi tiết</a><a
+                                class="action-chip grade" th:href="@{/lop-hoc-phan/{id}/nhap-diem(id=${l.maLopHp})}">📝
+                            Nhập điểm</a><a class="icon-btn edit" title="Sửa"
+                                            th:href="@{/lop-hoc-phan/sua/{id}(id=${l.maLopHp})}">✎</a>
+                            <form method="post" th:action="@{/lop-hoc-phan/xoa/{id}(id=${l.maLopHp})}"
+                                  onsubmit="return confirm('Xóa lớp và dữ liệu liên quan?')">
+                                <button class="icon-btn delete" title="Xóa">×</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(dsLop)}">
+                    <td colspan="6">
+                        <div class="empty-state"><span>🏫</span><b>Chưa có lớp học phần</b>
+                            <p>Hãy mở một lớp mới cho học kỳ này.</p></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
