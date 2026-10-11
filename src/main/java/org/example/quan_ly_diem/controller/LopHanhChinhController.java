@@ -73,5 +73,11 @@ public class LopHanhChinhController {
         }
         return "redirect:/lop-hanh-chinh";
     }
+    @GetMapping("/{id}")
+    public String chiTiet(@PathVariable String id, Model model) {
+        model.addAttribute("lop", lopHanhChinhService.layTheoMa(id));
+        model.addAttribute("dsSinhVien", lopHanhChinhService.laySinhVienTrongLop(id));
+        return "lop-hanh-chinh/chi-tiet";
+    }
 
 }
