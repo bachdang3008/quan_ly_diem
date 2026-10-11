@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - UTT EDU</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body.login-page {
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background:
+                    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, .16), transparent 28%),
+                    radial-gradient(circle at 85% 82%, rgba(255, 179, 71, .15), transparent 28%),
+                    linear-gradient(135deg, #083b66 0%, #075596 48%, #0b6fba 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            color: #1f2937;
+        }
+
+        .login-shell {
+            width: min(1080px, 100%);
+            min-height: 640px;
+            display: grid;
+            grid-template-columns: 1.08fr .92fr;
+            border-radius: 28px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, .98);
+            box-shadow: 0 32px 80px rgba(0, 28, 61, .34);
+            border: 1px solid rgba(255,255,255,.35);
+        }
+
+        .login-intro {
+            position: relative;
+            padding: 64px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+            background:
+                    linear-gradient(155deg, rgba(0, 62, 120, .96), rgba(0, 92, 168, .90)),
+                    linear-gradient(120deg, #0054a6, #003b75);
+            isolation: isolate;
+        }
+
+        .login-intro::before,
+        .login-intro::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            z-index: -1;
+        }
+
+        .login-intro::before {
+            width: 320px;
+            height: 320px;
+            right: -120px;
+            top: -110px;
+        }
+
+        .login-intro::after {
+            width: 220px;
+            height: 220px;
+            left: -80px;
+            bottom: -85px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 800;
+            letter-spacing: .04em;
+            font-size: 20px;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 15px;
+            display: grid;
+            place-items: center;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.22);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.15);
+            font-size: 24px;
+        }
+
+        .intro-copy {
+            max-width: 520px;
+        }
+
+        .intro-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            margin-bottom: 18px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.16);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .intro-copy h1 {
+            margin: 0 0 18px;
+            font-size: clamp(34px, 4vw, 52px);
+            line-height: 1.08;
+            letter-spacing: -.035em;
+        }
+
+        .intro-copy p {
+            margin: 0;
+            color: rgba(255,255,255,.82);
+            font-size: 16px;
+            line-height: 1.75;
+            max-width: 480px;
+        }
+
+        .intro-points {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 34px;
+        }
+
+        .intro-point {
+            padding: 16px 14px;
+            background: rgba(255,255,255,.10);
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+        }
+
+        .intro-point strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .intro-point span {
+            color: rgba(255,255,255,.70);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .intro-footer {
+            font-size: 12px;
+            color: rgba(255,255,255,.58);
+        }
+
+        .login-panel {
+            padding: 64px 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 390px;
+        }
+
+        .login-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: #eef6ff;
+            color: #0054a6;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .login-card h2 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 31px;
+            line-height: 1.2;
+            letter-spacing: -.03em;
+        }
+
+        .login-subtitle {
+            margin: 10px 0 30px;
+            color: #64748b;
+            line-height: 1.65;
+            font-size: 14px;
+        }
+
+        .login-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 13px 14px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            color: #b42318;
+            background: #fef3f2;
+            border: 1px solid #fecdca;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            display: grid;
+            place-items: center;
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .login-input {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #dbe3ec;
+            border-radius: 13px;
+            padding: 0 45px 0 44px;
+            background: #fbfdff;
+            color: #0f172a;
+            font: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: .2s ease;
+        }
+
+        .login-input::placeholder {
+            color: #a3afbf;
+        }
+
+        .login-input:focus {
+            border-color: #0b72c9;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(11, 114, 201, .10);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .password-toggle:hover {
+            background: #f1f5f9;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 52px;
+            margin-top: 7px;
+            border: 0;
+            border-radius: 13px;
+            color: #fff;
+            background: linear-gradient(135deg, #0054a6, #0877ca);
+            font: inherit;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 12px 24px rgba(0,84,166,.23);
+            transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 28px rgba(0,84,166,.28);
+            filter: brightness(1.03);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-hint {
+            margin-top: 22px;
+            padding: 13px 14px;
+            border-radius: 12px;
+            color: #64748b;
+            background: #f8fafc;
+            border: 1px solid #e8eef5;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .login-hint strong {
+            color: #334155;
+        }
+
+        @media (max-width: 860px) {
+            body.login-page {
+                padding: 18px;
+            }
+
+            .login-shell {
+                grid-template-columns: 1fr;
+                min-height: unset;
+            }
+
+            .login-intro {
+                padding: 38px 32px;
+                min-height: 330px;
+            }
+
+            .intro-points {
+                display: none;
+            }
+
+            .intro-footer {
+                margin-top: 32px;
+            }
+
+            .login-panel {
+                padding: 42px 28px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body.login-page {
+                padding: 0;
+                background: #fff;
+            }
+
+            .login-shell {
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .login-intro {
+                min-height: 270px;
+                padding: 30px 24px;
+            }
+
+            .intro-copy h1 {
+                font-size: 31px;
+            }
+
+            .login-panel {
+                padding: 36px 24px 44px;
+            }
+        }
+    </style>
+</head>
+<body class="login-page">
+
+<main class="login-shell">
+    <section class="login-intro">
+        <div class="brand">
+            <div class="brand-logo">🎓</div>
+            <span>UTT EDU</span>
+        </div>
+
+        <div class="intro-copy">
+            <div class="intro-kicker">Hệ thống quản lý đào tạo</div>
+            <h1>Quản lý điểm sinh viên rõ ràng và hiệu quả.</h1>
+            <p>
+                Theo dõi sinh viên, lớp học phần, điểm số, tình trạng vắng nghỉ
+                và báo cáo học tập trên một hệ thống thống nhất.
+            </p>
+
+            <div class="intro-points">
+                <div class="intro-point">
+                    <strong>Sinh viên</strong>
+                    <span>Quản lý hồ sơ và kết quả học tập.</span>
+                </div>
+                <div class="intro-point">
+                    <strong>Điểm số</strong>
+                    <span>Nhập điểm và tính GPA tự động.</span>
+                </div>
+                <div class="intro-point">
+                    <strong>Báo cáo</strong>
+                    <span>Thống kê nhanh và trực quan.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="intro-footer">University of Transport Technology · Student Score Management</div>
+    </section>
+
+    <section class="login-panel">
+        <div class="login-card">
+            <div class="login-badge">🔐 Admin Portal</div>
+            <h2>Chào mừng trở lại</h2>
+            <p class="login-subtitle">Đăng nhập bằng tài khoản quản trị để truy cập hệ thống.</p>
+
+            <div th:if="${error}" class="login-alert">
+                <span>⚠</span>
+                <span th:text="${error}">Sai tên đăng nhập hoặc mật khẩu.</span>
+            </div>
+
+            <form method="post" th:action="@{/login}">
+                <div class="field">
+                    <label for="username">Tài khoản</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">👤</span>
+                        <input
+                                id="username"
+                                class="login-input"
+                                type="text"
+                                name="username"
+                                autocomplete="username"
+                                required
+                                autofocus
+                                placeholder="Nhập tên đăng nhập">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="password">Mật khẩu</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">🔑</span>
+                        <input
+                                id="password"
+                                class="login-input"
+                                type="password"
+                                name="password"
+                                autocomplete="current-password"
+                                required
+                                placeholder="Nhập mật khẩu">
+                        <button
+                                type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                                aria-label="Hiện mật khẩu"
+                                title="Hiện/ẩn mật khẩu">👁</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">Đăng nhập vào hệ thống</button>
+            </form>
+
+            <!--            <div class="login-hint">-->
+            <!--                Tài khoản mặc định lần đầu:<br>-->
+            <!--                <strong>admin</strong> / <strong>admin123</strong>-->
+            <!--            </div>-->
+        </div>
+    </section>
+</main>
+
+<script>
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('passwordToggle');
+
+    passwordToggle.addEventListener('click', function () {
+        const isHidden = passwordInput.type === 'password';
+        passwordInput.type = isHidden ? 'text' : 'password';
+        passwordToggle.textContent = isHidden ? '🙈' : '👁';
+        passwordToggle.setAttribute('aria-label', isHidden ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
+    });
+</script>
+
+</body>
+</html>

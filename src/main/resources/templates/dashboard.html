@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Trang chủ - UTT EDU</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/menu :: menu}"></div>
+<div th:replace="~{fragments/menu :: flash}"></div>
+<main class="container dashboard-page">
+    <section class="hero hero-dashboard">
+        <div class="hero-copy">
+            <span class="hero-badge"><span class="pulse-dot"></span> Hệ thống quản lý đào tạo</span>
+            <h1>Chào mừng trở lại, <span th:text="${session.admin_name}">Admin</span></h1>
+            <p>Quản lý sinh viên, môn học, lớp học phần và kết quả học tập trên một giao diện thống nhất.</p>
+            <div class="hero-actions">
+                <a class="btn btn-light" th:href="@{/sinh-vien/them}">＋ Thêm sinh viên</a>
+                <a class="btn btn-glass" th:href="@{/lop-hoc-phan/them}">＋ Mở lớp học phần</a>
+            </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+            <div class="hero-orb hero-orb-one"></div><div class="hero-orb hero-orb-two"></div>
+            <div class="hero-school">🎓</div>
+            <div class="hero-mini-card"><b>UTT EDU</b><span>Academic Management</span></div>
+        </div>
+    </section>
+
+    <section class="stats-grid">
+        <a class="metric-card metric-blue" th:href="@{/sinh-vien}">
+            <div class="metric-icon">👨‍🎓</div><div><span class="metric-label">Sinh viên</span><strong th:text="${soSv}">0</strong><small>Hồ sơ đang quản lý</small></div><span class="metric-arrow">→</span>
+        </a>
+        <a class="metric-card metric-violet" th:href="@{/mon-hoc}">
+            <div class="metric-icon">📚</div><div><span class="metric-label">Môn học</span><strong th:text="${soMon}">0</strong><small>Trong danh mục đào tạo</small></div><span class="metric-arrow">→</span>
+        </a>
+        <a class="metric-card metric-cyan" th:href="@{/lop-hoc-phan}">
+            <div class="metric-icon">🏫</div><div><span class="metric-label">Lớp học phần</span><strong th:text="${soLop}">0</strong><small>Lớp đã được mở</small></div><span class="metric-arrow">→</span>
+        </a>
+        <a class="metric-card metric-green" th:href="@{/lop-hanh-chinh}">
+            <div class="metric-icon">🏛️</div><div><span class="metric-label">Khoa</span><strong th:text="${soKhoa}">0</strong><small>Đơn vị trực thuộc</small></div><span class="metric-arrow">→</span>
+        </a>
+    </section>
+
+    <section class="dashboard-columns">
+        <div class="surface-card">
+            <div class="section-heading"><div><span class="eyebrow">Truy cập nhanh</span><h2>Chức năng thường dùng</h2></div></div>
+            <div class="quick-grid">
+                <a class="quick-card" th:href="@{/sinh-vien}"><span>👥</span><div><b>Danh sách sinh viên</b><small>Tìm kiếm và cập nhật hồ sơ</small></div></a>
+                <a class="quick-card" th:href="@{/lop-hoc-phan}"><span>📝</span><div><b>Nhập điểm học phần</b><small>Chuyên cần, giữa kỳ và cuối kỳ</small></div></a>
+                <a class="quick-card" th:href="@{/bao-cao}"><span>📈</span><div><b>Báo cáo học tập</b><small>GPA, học bổng và cảnh báo</small></div></a>
+                <a class="quick-card" th:href="@{/mon-hoc}"><span>📖</span><div><b>Danh mục môn học</b><small>Quản lý mã môn và tín chỉ</small></div></a>
+            </div>
+        </div>
+        <aside class="surface-card notice-card">
+            <span class="eyebrow eyebrow-green">Tổng quan</span>
+            <h2>Quản trị tập trung</h2>
+            <p>Mọi dữ liệu đào tạo được kết nối theo luồng Sinh viên → Lớp học phần → Bảng điểm → Báo cáo.</p>
+            <div class="flow-list"><span>01</span><b>Quản lý dữ liệu</b><i></i><span>02</span><b>Nhập điểm</b><i></i><span>03</span><b>Thống kê</b></div>
+        </aside>
+    </section>
+</main>
+</body>
+</html>
